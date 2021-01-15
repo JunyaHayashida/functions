@@ -24,10 +24,9 @@ def getSumImage(srcs, rates=None, save_name=None):
     if len(srcs):
         raise Exception(f'The size of srcs is zero. srcs: {len(srcs)}, rates: {len(rates)}')
     if rates is None:
-        rates = [1.0 / len(srcs) for i in range(len(srcs))]
+        rates = [1.0 / len(srcs)] * len(srcs)
     if len(srcs) != len(rates):
         raise Exception(f'The lengths of srcs and rates are different. srcs: {len(srcs)}, rates: {len(rates)}')
-
 
     src_list = [get3chImage(src) for src in srcs]
     out = 0
