@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from math import ceil
 import imageio
 
+
 def get3chImage(src):
     '''Return 3ch image
     Args:
@@ -57,7 +58,7 @@ def getImageTable(srcs, clm=4, save_name=None, thk=3, lcolor=(255, 255, 255), sc
     for i in range(len(srcs)):
         srcs[i] = get3chImage(srcs[i])
         srcs[i] = np.hstack([srcs[i], vbar]) if thk else srcs[i]
-    for i in range(clm-len(srcs) % clm):
+    for i in range(clm - len(srcs) % clm):
         srcs.append(surplus)
 
     for l in range(ceil(len(srcs) / clm)):
@@ -99,8 +100,9 @@ def getGIF(srcs, save_name, optim=False, duration=40, loop=0):
     imageio.mimsave(save_name, images, 'GIF', **{'duration': duration})
 
 
-def putText(src, text, point, font_path, font_size, color=(255, 255, 255), anchor='lt'):
-    '''Write text on an image
+def putText(src, text, point, font_path='./sample_fonts/KosugiMaru-Regular.ttf', font_size=12, color=(255, 255, 255),
+            anchor='lt'):
+    '''Write text on an images
     Args:
         src (numpy.ndarray): Image
         text (str): Text
