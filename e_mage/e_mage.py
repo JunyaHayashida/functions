@@ -15,15 +15,24 @@ def get3chImage(src):
     return cv2.cvtColor(src, cv2.COLOR_GRAY2BGR) if len(chk) == 2 or chk[-1] == 1 else src
 
 
-def getSyntheticImage(src1, rate1, src2, rate2, save_name=None):
-    '''Synthesize two images
+def getSumImage(srcs, rates=None, save_name=None):
+    '''Sum the images
     Args:
-        src1, src2 (numpy.adarray): Image to be synthesized
-        rate1, rate2 (int): Percentage to be synthesized (rate1+rate2 can be more than 1)
+        srcs (list of numpy.ndarray): Image list to be synthesized
+        rates (list of float): Percentage list to be synthesized (rate1+rate2 can be more than 1)
     '''
-    src1 = get3chImage(src1)
-    src2 = get3chImage(src2)
-    out = src1 * rate1 + src2 * rate2
+    if len(srcs):
+        raise Exception(f'The size of srcs is zero. srcs: {len(srcs)}, rates: {len(rates)}')
+    if rates is None:
+        rates = [1.0 / len(srcs) for i in range(len(srcs))]
+    if len(srcs) != len(rates):
+        raise Exception(f'The lengths of srcs and rates are different. srcs: {len(srcs)}, rates: {len(rates)}')
+
+
+    src_list = [get3chImage(src) for src in srcs]
+    out = 0
+    for src, rate in zip(src_list, rates):
+        out = out + src * rate
     out[out > 255] = 255
     out = out.astype('uint8')
     if save_name is not None:
