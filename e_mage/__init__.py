@@ -1,2 +1,2 @@
 from . import image
-from . import hm
+from . import heatmap

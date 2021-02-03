@@ -78,19 +78,19 @@ def generate_voronoi_vectormap(tracklets, ishape: tuple, itv: int = 1):
         tracklets (): [[frame, id, x, y]]
     '''
 
-    tracklets = np.array(tracklets) if type(tracklets) is np.ndarray else tracklets
-
-    iH, iW = ishape
-    coords = np.array([[int(p/iH), iW%p] for p in range(iH*iW)])
-    frames = np.unique(tracklets)
-
-    for frame in frames:
-        source = tracklets[tracklets[:,0]==frame]
-        target = tracklets[tracklets[:,0]==frame+itv]
-        if len(target):
-            dmap = distance.cdist(source[:,2:4][...,None], coords[None], metric='euclidean')
-            s_idcs = np.argmin(dmap, axis=0)
-
+    # tracklets = np.array(tracklets) if type(tracklets) is np.ndarray else tracklets
+    #
+    # iH, iW = ishape
+    # coords = np.array([[int(p/iH), iW%p] for p in range(iH*iW)])
+    # frames = np.unique(tracklets)
+    #
+    # for frame in frames:
+    #     source = tracklets[tracklets[:,0]==frame]
+    #     target = tracklets[tracklets[:,0]==frame+itv]
+    #     if len(target):
+    #         dmap = distance.cdist(source[:,2:4][...,None], coords[None], metric='euclidean')
+    #         s_idcs = np.argmin(dmap, axis=0)
+    pass
 
 def generate_MPM():
     pass
