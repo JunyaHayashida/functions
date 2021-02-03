@@ -6,7 +6,7 @@ from math import ceil
 import imageio
 
 
-def get3chImage(src):
+def convert_3ch(src):
     '''Return 3ch image
     Args:
         src (numpy.ndarray): Input image
@@ -15,7 +15,7 @@ def get3chImage(src):
     return cv2.cvtColor(src, cv2.COLOR_GRAY2BGR) if len(chk) == 2 or chk[-1] == 1 else src
 
 
-def getSumImage(srcs, rates=None, save_name=None):
+def weighted_sum(srcs, rates=None, save_name=None):
     '''Sum the images
     Args:
         srcs (list of numpy.ndarray): Image list to be synthesized
@@ -28,7 +28,7 @@ def getSumImage(srcs, rates=None, save_name=None):
     if len(srcs) != len(rates):
         raise Exception(f'The lengths of srcs and rates are different. srcs: {len(srcs)}, rates: {len(rates)}')
 
-    src_list = [get3chImage(src) for src in srcs]
+    src_list = [convert_3ch(src) for src in srcs]
     out = 0
     for src, rate in zip(src_list, rates):
         out = out + src * rate
@@ -40,7 +40,7 @@ def getSumImage(srcs, rates=None, save_name=None):
         return out
 
 
-def getImageTable(srcs, clm=4, save_name=None, thk=3, lcolor=(255, 255, 255), scolor=(0, 0, 0)):
+def get_img_table(srcs, clm=4, save_name=None, thk=3, lcolor=(255, 255, 255), scolor=(0, 0, 0)):
     '''Arrange the given image list in the specified number of columns.
     Args:
         srcs (list of numpy.ndarray): Image list
@@ -52,19 +52,19 @@ def getImageTable(srcs, clm=4, save_name=None, thk=3, lcolor=(255, 255, 255), sc
     Return:
         itable (numpy.ndarray): Image table if save_name is None
     Example:
-        >>> itable = getImageTable([im1,im2,im3], clm=2, thk=1, lcolor=(0,0,255), scolor=(255,0,0))
+        >>> itable = get_img_table([im1,im2,im3], clm=2, thk=1, lcolor=(0,0,255), scolor=(255,0,0))
     '''
 
     vbar = np.full((srcs[0].shape[0], thk, 3), lcolor, np.uint8) if thk else None
     hbar = np.full((thk, (srcs[0].shape[1] + thk) * clm - thk, 3), lcolor, np.uint8) if thk else None
 
-    surplus = np.full(get3chImage(srcs[0]).shape, scolor, np.uint8)
+    surplus = np.full(convert_3ch(srcs[0]).shape, scolor, np.uint8)
     if thk:
         surplus = np.hstack([surplus, vbar])
     itable = []
 
     for i in range(len(srcs)):
-        srcs[i] = get3chImage(srcs[i])
+        srcs[i] = convert_3ch(srcs[i])
         srcs[i] = np.hstack([srcs[i], vbar]) if thk else srcs[i]
     for i in range(clm - len(srcs) % clm):
         srcs.append(surplus)
@@ -85,7 +85,7 @@ def getImageTable(srcs, clm=4, save_name=None, thk=3, lcolor=(255, 255, 255), sc
         return itable
 
 
-def getVIDEO(srcs, save_name, fps=10):
+def get_video(srcs, save_name, fps=10):
     black_bar = np.zeros((35, srcs[0].shape[1], 3)).astype('uint8')
     black_bar[-2:] = 255
     fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
@@ -98,7 +98,7 @@ def getVIDEO(srcs, save_name, fps=10):
     video.release()
 
 
-def getGIF(srcs, save_name, optim=False, duration=40, loop=0):
+def get_gif(srcs, save_name, optim=False, duration=40, loop=0):
     images = []
     for src in srcs:
         chk = src.shape
@@ -108,8 +108,8 @@ def getGIF(srcs, save_name, optim=False, duration=40, loop=0):
     imageio.mimsave(save_name, images, 'GIF', **{'duration': duration})
 
 
-def putText(src, text, point, font_path='./sample_fonts/KosugiMaru-Regular.ttf', font_size=12, color=(255, 255, 255),
-            anchor='lt'):
+def put_text(src, text, point, font_path='./sample_fonts/KosugiMaru-Regular.ttf', font_size=12, color=(255, 255, 255),
+             anchor='lt'):
     '''Write text on an images
     Args:
         src (numpy.ndarray): Image

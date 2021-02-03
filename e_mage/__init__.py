@@ -1,2 +1,2 @@
-from . import e_mage
+from . import image
 from . import hm
