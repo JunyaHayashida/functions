@@ -53,6 +53,7 @@ def get_img_table(srcs, clm=4, save_name=None, thk=3, lcolor=(255, 255, 255), sc
         itable (numpy.ndarray): Image table if save_name is None
     Example:
         >>> itable = get_img_table([im1,im2,im3], clm=2, thk=1, lcolor=(0,0,255), scolor=(255,0,0))
+        >>> get_img_table([im1,im2,im3], save_name='./itable.png', clm=3)
     '''
 
     vbar = np.full((srcs[0].shape[0], thk, 3), lcolor, np.uint8) if thk else None
